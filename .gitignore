@@ -43,3 +43,8 @@ Thumbs.db
 .coverage
 htmlcov/
 coverage/
+
+# Editor backup files
+*.save
+*.save.*
+*~
