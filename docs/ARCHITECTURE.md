@@ -40,13 +40,16 @@ PostgreSQL is the intended production migration option.
 
 AI functionality is accessed only through backend services.
 
-AI capabilities:
+
+##AI capabilities:
 
 - Classification suggestions
 - Duplicate similarity suggestions
 - Investigation summaries
 - Outcome letter drafting
 - Translation
+- Speech-to-text and suggested form-field extraction.
+- Contextual follow-up questions.
 
 Deterministic rules must handle safety-critical escalation.
 

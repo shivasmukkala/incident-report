@@ -11,16 +11,28 @@ AI must assist people rather than replace accountable decision-makers.
 - Investigation note summaries
 - Outcome letter drafting
 - Translation
+- Speech-to-text transcription and suggested form-field extraction
+- Contextual follow-up questions to clarify missing information
 
 ## Human Approval
 
-Human approval is required for:
--submitting the incident 
-- Consequential decisions
-- Case assignment
-- Duplicate closure
-- Final resolution and closure
-- Outcome letter dispatch
+- The reporter reviews and approves AI-extracted information before submission.
+- The reporter decides when to submit the incident.
+- Case handlers confirm or change priority and category.
+- Case handlers approve assignments.
+- Potential duplicates require human review before closure.
+- Authorised personnel approve final resolution and closure.
+- Outcome letters require human approval before dispatch.
+
+## Voice Input Safeguards
+
+- Explain when microphone access and speech processing are used.
+- Preserve the original transcript for review.
+- Allow reporters to edit extracted information.
+- Never invent details that were not spoken.
+- Leave uncertain information blank or mark it for confirmation.
+- Provide a complete text-based alternative to voice input.
+- Apply an approved retention policy to audio recordings and transcripts.
 
 ## Safety
 

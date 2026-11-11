@@ -52,3 +52,33 @@ Keep categories, teams and routing policies configurable.
 
 Future decisions should be added with context, alternatives,
 consequences and implementation evidence.
+
+## ADR-006: Azure AI Speech for Voice Transcription
+
+Status: Accepted for MVP evaluation
+
+Context:
+Safe Spot requires optional voice-assisted incident reporting.
+The solution should be reliable, economical and privacy-conscious.
+
+Decision:
+Evaluate Azure AI Speech standard speech-to-text for voice transcription.
+
+Development:
+Use the F0 free tier where available and suitable.
+
+Production:
+Evaluate the S0 pay-as-you-go tier using measured usage, accuracy and regional pricing.
+
+Constraints:
+- Voice input remains optional.
+- Reporters review and approve extracted information.
+- Audio retention must follow an approved policy.
+- Do not store recordings unnecessarily.
+- Provide a text-based alternative.
+
+Evidence required:
+- Transcription accuracy tests using varied accents and background noise.
+- Cost per hour of audio.
+- Privacy and data-processing review.
+- Error handling and service availability tests.

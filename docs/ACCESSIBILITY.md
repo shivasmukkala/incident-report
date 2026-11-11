@@ -12,6 +12,14 @@
 - Responsive mobile layouts.
 - Accessible file upload controls.
 
+## Voice Accessibility
+
+- Voice input must be optional.
+- All reporting functions must remain available through text.
+- Microphone permission must be clearly explained.
+- Transcribed information must be editable.
+- Errors must be communicated through accessible text messages.
+
 ## Testing
 
 - Keyboard-only navigation.
