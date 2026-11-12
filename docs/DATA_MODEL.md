@@ -1,5 +1,5 @@
 
-# Safe Spot - Data Model
+# Incident Report - Data Model
 
 ## 1. Design Principles
 
@@ -14,7 +14,8 @@
 
 ## 2. Cases
 
-Main incident record.
+Implementation status: The initial Case model is implemented.
+Additional fields and related entities in this document represent the planned target data model unless explicitly marked as implemented.
 
 - id
 - reference
@@ -29,10 +30,7 @@ Main incident record.
 - perceived_urgency
 - confirmed_priority (set by case handler)
 - incident_datetime
-- incident_postcode (optional)
-- incident_address (optional)
-- latitude (optional)
-- longitude (optional)
+- location_description (optional)
 - location_precision
 - location_source
 - location_confirmed_by (optional)

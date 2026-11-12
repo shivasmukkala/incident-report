@@ -144,3 +144,36 @@ def test_health_check(client):
 
     assert response.status_code == 200
     assert response.json() == {"status": "healthy"}
+
+
+def test_create_case_with_all_incident_fields(client):
+    response = client.post(
+        "/cases/",
+        json={
+            "title": "Slip incident near entrance",
+            "description": "A visitor slipped near the main entrance.",
+            "category": "slip_trip",
+            "incident_datetime": "2026-11-10T09:30:00",
+            "perceived_urgency": "high",
+            "location_description": "Near the main entrance",
+            "location_precision": "approximate",
+        },
+    )
+
+    assert response.status_code == 201
+
+    created_case = response.json()
+    case_id = created_case["id"]
+
+    # Retrieve the saved case from the database.
+    get_response = client.get(f"/cases/{case_id}")
+
+    assert get_response.status_code == 200
+
+    data = get_response.json()
+
+    assert data["category"] == "slip_trip"
+    assert data["incident_datetime"] == "2026-11-10T09:30:00"
+    assert data["perceived_urgency"] == "high"
+    assert data["location_description"] == "Near the main entrance"
+    assert data["location_precision"] == "approximate"
