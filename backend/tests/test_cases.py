@@ -62,6 +62,8 @@ def test_get_existing_case(client):
     assert response.status_code == 200
     assert response.json()["id"] == case_id
     assert response.json()["title"] == "Retrieval test case"
+    assert response.json()["reference"] == create_response.json()["reference"]
+
 
 
 def test_get_nonexistent_case(client):
@@ -86,6 +88,8 @@ def test_create_case_successfully(client):
     assert data["id"] == 1
     assert data["title"] == "Test safety concern"
     assert data["status"] == "submitted"
+    assert data["reference"].startswith("IR-")
+    assert len(data["reference"]) == 19
 
 
 def test_create_case_without_title(client):
@@ -138,10 +142,13 @@ def test_get_cases_returns_created_cases(client):
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0]["title"] == "First safety concern"
+    references = [case["reference"] for case in response.json()]
+
+    assert len(set(references)) == 2
+    assert all(reference.startswith("IR-") for reference in references)
 
 def test_health_check(client):
     response = client.get("/health")
-
     assert response.status_code == 200
     assert response.json() == {"status": "healthy"}
 

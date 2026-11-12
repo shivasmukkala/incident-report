@@ -15,6 +15,7 @@ class CaseCreate(BaseModel):
 
 class CaseResponse(BaseModel):
     id: int
+    reference: str
     title: str
     description: str
     status: str
