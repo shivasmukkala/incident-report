@@ -1,144 +1,173 @@
-
 # Incident Report - Data Model
 
 ## 1. Design Principles
 
 - Use SQLite for initial development.
-- Use UUIDs or equivalent unique identifiers.
+- Use UUIDs or equivalent externally safe identifiers where appropriate.
 - Keep database access separate from business logic.
 - Preserve historical decisions and assignments.
 - Store timestamps in UTC.
 - Support migration to PostgreSQL.
 - Minimise personal and sensitive information.
-- Never store uploaded files directly in database records.
+- Never store uploaded file contents directly in relational database records.
+- Use fictional or approved anonymised data for demonstrations.
+- Apply role-based access to personal and exact location data.
 
-## 2. Cases
+Implementation status: the initial `Case` model exists. The entities below describe the target model; do not assume they are already implemented.
 
-Implementation status: The initial Case model is implemented.
-Additional fields and related entities in this document represent the planned target data model unless explicitly marked as implemented.
+## 2. Case
 
+The central request/incident record.
+
+Planned fields:
 - id
-- reference
-- reporter_type: employee, resident, visitor, public, other
+- reference (unique public-facing case reference)
+- title
+- description
+- reporter_type
+- reporter_id (optional, where a Reporter record is used)
 - reporter_name (optional)
 - reporter_contact (optional)
 - contact_updates_requested
 - is_anonymous
 - anonymous_access_token_hash (optional)
-- category
-- description
+- category_id (optional during migration; required when category selection is enforced)
 - perceived_urgency
-- confirmed_priority (set by case handler)
+- confirmed_priority (set by authorised case handler)
 - incident_datetime
 - location_description (optional)
 - location_precision
 - location_source
-- location_confirmed_by (optional)
+- location_confirmed_by (optional user reference)
 - status
 - created_at
 - updated_at
+- acknowledged_at (optional)
+- sla_due_at (optional)
 - risk_controlled_at (optional)
 - resolved_at (optional)
 - verified_at (optional)
 - closed_at (optional)
 
+Current implementation fields: id, title, description, category as nullable text, incident_datetime, perceived_urgency, location_description, location_precision, status and created_at. The current model does not yet implement the full target Case fields.
 
-## 3. Intake Sessions
+## 3. Reporter
 
-Temporary reporting sessions created before an incident is submitted.
+Reporter information, separated from staff identity where appropriate.
 
+Planned fields:
 - id
-- session_token_hash
-- reporter_type (optional)
-- status: in_progress, ready_for_review, submitted, expired
-- extracted_fields (structured data)
+- reporter_type
+- name (optional)
+- contact_email (optional)
+- contact_phone (optional)
+- preferred_language (optional)
+- preferred_contact_method (optional)
+- contact_updates_requested
+- created_at
+
+Anonymous reporters may have no Reporter record. Do not collect information that is not needed for the service.
+
+## 4. Category
+
+Configurable classification and routing metadata.
+
+Planned fields:
+- id
+- name
+- description
+- default_team_id (optional)
+- default_priority (optional)
+- is_active
 - created_at
 - updated_at
-- expires_at (optional)
-- submitted_case_id (optional)
 
-Purpose:
-- Manage voice and text reporting before case creation.
-- Store suggested form fields for reporter review.
-- Link follow-up questions and voice records to the reporting session.
-- Create a case only after the reporter approves submission.
-- Expire abandoned sessions according to an approved retention policy.
+A Case references Category through `category_id`. During migration from the current free-text `Case.category`, existing values must be mapped deliberately; do not silently discard them.
 
+## 5. Team
 
-## 4. Users
+Operational teams responsible for handling cases.
+
+Planned fields:
+- id
+- name
+- description
+- contact_email (optional)
+- working_hours (optional/configurable representation)
+- manager_id (optional user reference)
+- is_active
+
+## 6. User
 
 Authorised staff accounts.
 
+Planned fields:
 - id
 - name
 - email
 - role
-- team_id
+- team_id (optional)
 - is_active
 - created_at
 
-Roles:
-- triage_officer
+Supported staff roles:
+- case_handler
 - field_officer
-- manager
-- administrator
+- team_manager
 
-## 5. Teams
+An administrator role may be used for technical configuration if required, but it is not a primary operational role. Reporter access is handled separately and may be anonymous.
 
-Operational teams.
+## 7. Assignment
 
-- id
-- name
-- description
-- is_active
+Preserves assignment history rather than overwriting the current assignee.
 
-## 6. Assignments
-
-Assignment history.
-
+Planned fields:
 - id
 - case_id
-- assigned_user_id
+- assigned_user_id (optional)
 - assigned_team_id
 - assigned_by
 - assignment_reason
 - assigned_at
 - unassigned_at (optional)
 
-## 7. Investigations
+## 8. Investigation / Site Visit
 
-Officer investigation records.
+Records officer attendance and findings.
 
+Planned fields:
 - id
 - case_id
 - officer_id
-- attendance_time
+- attendance_time (optional)
 - findings
-- immediate_controls
-- resolution_notes
+- immediate_controls (optional)
+- resolution_notes (optional)
 - created_at
 - updated_at
 
-## 8. Corrective Actions
+## 9. Corrective Action
 
 Actions required to control or prevent risks.
 
+Planned fields:
 - id
 - case_id
 - description
-- owner_id
-- due_date
+- owner_id (optional)
+- due_date (optional)
 - status
 - completed_at (optional)
-- completion_notes
+- completion_notes (optional)
 - verified_by (optional)
 - verified_at (optional)
 - created_at
 
-## 9. Evidence
+## 10. Evidence
 
-Uploaded files and supporting evidence.
+Metadata for uploaded files and supporting evidence.
 
+Planned fields:
 - id
 - case_id
 - investigation_id (optional)
@@ -152,12 +181,36 @@ Uploaded files and supporting evidence.
 - uploaded_by (optional)
 - uploaded_at
 
-## 10. Voice Records
+Files must be validated and scanned before authorised access. The file itself is stored outside the relational database.
 
-Voice transcription records.
+## 11. Intake Session
 
+Temporary reporting session before a case is submitted.
+
+Planned fields:
 - id
-- case_id (optional, before submission)
+- session_token_hash
+- reporter_type (optional)
+- status: in_progress, ready_for_review, submitted, expired
+- extracted_fields (structured data)
+- created_at
+- updated_at
+- expires_at (optional)
+- submitted_case_id (optional)
+
+Purpose:
+- Manage voice/text reporting before case creation.
+- Store suggested fields for reporter review.
+- Link voice records and follow-up questions to the session.
+- Create a Case only after reporter approval.
+- Expire abandoned sessions under an approved retention policy.
+
+## 12. Voice Record
+
+Planned fields:
+- id
+- case_id (optional before submission)
+- intake_session_id
 - transcript
 - language
 - speech_service
@@ -166,14 +219,15 @@ Voice transcription records.
 - audio_storage_path (optional)
 - retention_expiry (optional)
 - created_at
-- intake_session_id
 
-## 11. Follow-up Questions
+Voice is optional. Preserve the transcript as appropriate, avoid unnecessary audio retention and provide a text alternative.
 
-Questions and answers used to clarify reports.
+## 13. Follow-up Question
 
+Planned fields:
 - id
-- case_id
+- case_id (optional before submission)
+- intake_session_id (optional)
 - question_text
 - answer_text (optional)
 - question_reason
@@ -181,14 +235,15 @@ Questions and answers used to clarify reports.
 - status
 - created_at
 - answered_at (optional)
-- intake_session_id (optional)
 
-## 12. AI Assessments
+## 14. AI Assessment
 
-Record AI-generated suggestions.
+Records AI-generated suggestions and review.
 
+Planned fields:
 - id
-- case_id
+- case_id (optional before submission)
+- intake_session_id (optional)
 - task_type
 - input_reference
 - suggestion
@@ -200,21 +255,15 @@ Record AI-generated suggestions.
 - reviewed_by (optional)
 - reviewed_at (optional)
 - created_at
-- intake_session_id (optional)
 
-Task types may include:
-- speech_extraction
-- follow_up_questions
-- classification
-- duplicate_detection
-- investigation_summary
-- translation
-- outcome_drafting
+Task types may include speech_extraction, follow_up_questions, classification, priority_recommendation, duplicate_detection, investigation_summary, translation and outcome_drafting.
 
-## 13. Outcome Letters
+## 15. Communication / Outcome Letter
 
+Planned fields:
 - id
 - case_id
+- communication_type (acknowledgement or outcome)
 - language
 - draft_content
 - approval_status
@@ -223,12 +272,25 @@ Task types may include:
 - sent_at (optional)
 - created_at
 
-## 14. Audit Events
+## 16. SLA Rule
 
-Record important case and operational changes.
-
+Planned fields:
 - id
-- case_id
+- priority
+- acknowledgement_target
+- resolution_target
+- working_calendar (optional/configurable)
+- is_active
+
+SLA targets should be configurable for each priority level. Example targets are for demonstration purposes only; operational targets and working-time rules must be approved by the organisation.
+
+## 17. Audit Event
+
+Records important case and operational changes.
+
+Planned fields:
+- id
+- case_id (optional for non-case events)
 - actor_id (optional for system actions)
 - action
 - entity_type
@@ -237,9 +299,29 @@ Record important case and operational changes.
 - new_value (optional)
 - timestamp
 
-## 15. Important Data Rules
+## 18. Relationships
 
-- A case reference is not sufficient to access an anonymous report.
+- One Category can be associated with many Cases; each Case has zero or one Category during the migration period, then normally one.
+- A Category may have one default Team.
+- One Team can have many Users.
+- One Team can be responsible for many Assignments.
+- One Case can have many Assignments over time.
+- One Case can have many Investigations.
+- One Case can have many Corrective Actions.
+- One Case can have many Evidence records.
+- One Case can have many AI Assessments.
+- One Case can have many Follow-up Questions.
+- One Case can have many Communications.
+- One Case can have many Audit Events.
+- A User may be assigned to many Cases through Assignment records.
+- A Corrective Action may have one owner.
+- One Intake Session can have multiple Voice Records, Follow-up Questions and AI Assessments.
+- One Intake Session can create at most one submitted Case.
+- Reporter records may be associated with multiple Cases; anonymous reports need not have a Reporter record.
+
+## 19. Important Data Rules
+
+- A case reference alone is not sufficient to access an anonymous report.
 - Store only a hash of an anonymous access token.
 - Reporter urgency and professional priority must remain separate.
 - Incident time and report submission time must remain separate.
@@ -251,21 +333,3 @@ Record important case and operational changes.
 - Exact location data must only be visible to authorised roles.
 - Apply approved retention and deletion policies to personal data.
 - Preserve audit history according to the organisation's retention policy.
-
-## 16. Database Relationships
-
-- One case can have multiple assignments.
-- One case can have multiple investigations.
-- One case can have multiple corrective actions.
-- One case can have multiple evidence records.
-- One case can have multiple AI assessments.
-- One case can have multiple follow-up questions.
-- One case can have multiple audit events.
-- Users belong to teams where applicable.
-- Assignments link cases, users and teams.
-- Corrective actions may have an assigned owner.
-- One intake session can have multiple voice records.
-- One intake session can have multiple follow-up questions.
-- One intake session can have multiple AI assessments.
-- One intake session can create one submitted case.
-- After submission, related intake records retain their original history.

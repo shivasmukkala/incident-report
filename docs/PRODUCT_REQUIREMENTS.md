@@ -1,148 +1,154 @@
 # Product Requirements Document
 
-## 1. Objective
+## 1. Product Objective
 
-Create a simple, trustworthy, AI-assisted service that takes an issue
-from first report to resolved case and provides management visibility.
+Build a simple, trustworthy, accessible, AI-assisted Request to Resolution service that takes an issue from its first report through triage, investigation, corrective action, response and closure, while giving managers visibility of service performance.
 
-## 2. Initial Setting
+Initial setting: Health and Safety. The platform should use reusable components and configurable categories, teams and routing policies so that it can be adapted to other operational settings.
 
-Health and Safety.
+## 2. Core Workflow
 
-## 3. Personas
+Incident Report follows a six-stage Request-to-Resolution workflow:
+
+1. Report
+2. Triage and route
+3. Attend and investigate
+4. Record outcome
+5. Respond
+6. Review and improve
+
+## 3. Personas and Roles
 
 ### Reporter
-Needs accessible reporting, confirmation and a clear outcome.
+A resident, customer, employee, visitor or member of the public. Needs an accessible way to submit an issue, receive confirmation and understand the outcome. Reporting should not require a staff account; anonymous reporting is supported.
 
-### Triage Officer
-Needs accurate reports, useful routing suggestions and less manual work.
+### Case handler / Triage officer
+Needs to review reports, clarify information, confirm category and priority, identify possible duplicates and route cases to the appropriate team.
 
-### Field Officer
-Needs an assigned case list, investigation tools and evidence capture.
+### Field officer
+Needs to see assigned cases, attend the location, record findings, evidence and immediate controls, and update corrective actions.
 
-### Team Manager
-Needs workload visibility, delays, trends and performance measures.
+### Team manager
+Needs visibility of workload, overdue cases, SLA performance, outstanding actions and trends.
 
-## 4. Functional Requirements
+These are the four primary application roles. Administrator access may be added for technical configuration if required, but it is not a primary operational role.
 
-### FR-01: Reporting
-- Submit reports without requiring an account.
-- Support anonymous reporting.
-- Capture category, severity, description and location.
-- Support optional attachments.
-- Generate a unique case reference.
+## 4. Functional Requirements — Six Workflow Stages
 
-### FR-02: Triage
-- Suggest incident categories.
-- Recommend priority using explicit safety rules.
-- Identify possible duplicate reports.
-- Recommend a responsible team.
-- Require human confirmation.
+### Stage 1: Report
 
-### FR-03: Investigation
-- Display assigned cases.
-- Record attendance and findings.
-- Record immediate risk controls.
-- Upload supporting evidence.
-
-### FR-04: Resolution
-- Record actions and resolution notes.
-- Capture completion evidence.
-- Require authorised closure.
-
-### FR-05: Communication
-- Draft outcome letters.
-- Support language selection and translation.
-- Require human approval.
-- Record communication status.
-
-### FR-06: Management
-- Display active and closed cases.
-- Track time to risk controlled.
-- Monitor overdue cases.
-- Show team workload and trends.
-
-## 5. Non-Functional Requirements
-
-- Responsive design.
-- Accessible forms.
-- Clear error messages.
-- API validation.
-- Secure file handling.
-- Traceable case updates.
-- Maintainable modular architecture.
-
-## 6. MVP Scope
-
-First deliver:
-- Employee reporting interface.
-- FastAPI submission endpoint.
-- Persistent case storage.
-- Case reference generation.
-
-Subsequent functionality must be added through verified milestones.
-
-## 7. Acceptance Criteria
-
-A reporter can submit a valid fictional incident,
-receive a unique reference and retrieve the stored case.
-
-The system must reject invalid submissions and provide
-understandable validation errors.
-
-## AI-First MVP Scope
-
-### 1. Incident reporting
-- Support employees, residents, visitors and members of the public.
-- Allow anonymous and identified reports.
-- Capture incident category, description, perceived urgency, incident date/time and location.
+- Allow people to report an issue using a responsive web interface.
+- Support identified and anonymous reports.
+- Do not require a staff account to submit a report.
+- Capture a title, description, category or issue type, perceived urgency, incident date/time and location.
 - Support optional evidence uploads.
+- Support optional voice-assisted reporting, with a text alternative.
 - Generate a unique case reference.
+- Acknowledge receipt and explain how the reporter can follow up.
+- Provide a clear emergency instruction: users must not wait for this application in an emergency and must follow the relevant emergency procedures.
 
-### 2. Voice-assisted reporting
-- Allow reporters to provide a spoken description.
-- Convert speech into a transcript and suggested form fields.
-- Preserve the original transcript.
-- Never invent missing information.
-- Allow the reporter to review, correct and approve all extracted information before submission.
-- Explain how voice data is processed and retained.
+### Stage 2: Triage and route
 
-### 3. AI-assisted follow-up questions
-- Identify important missing or unclear information.
-- Ask relevant questions, normally one at a time.
-- Allow the reporter to skip questions or answer "I don't know".
-- Never delay urgent reporting because of follow-up questions.
+- Present new reports to authorised case handlers.
+- Suggest a category and relevant missing information.
+- Ask relevant follow-up questions where useful; allow the reporter to skip or answer that they do not know.
+- Recommend priority using explicit, explainable rules and available information.
+- Identify possible duplicate reports without automatically merging them.
+- Recommend a responsible team.
+- Require an authorised human to confirm or change consequential triage decisions.
+- Record recommendations, decisions and overrides.
 
-### 4. AI-assisted triage
-- Suggest incident category and relevant information.
-- Identify possible duplicate reports.
-- Recommend priority and responsible team.
-- Require a case handler to confirm or change recommendations.
-- Record human decisions and overrides.
+### Stage 3: Attend and investigate
 
-### 5. Operational case management
-- Assign cases to field officers.
-- Record investigation findings, evidence and corrective actions.
-- Track risk control separately from investigation and case closure.
+- Show field officers the cases assigned to them.
+- Provide an appropriate mobile-friendly case view.
+- Record attendance, findings, notes and immediate controls.
+- Allow supporting evidence to be attached to the case or investigation.
+- Restrict access to sensitive location and reporter information by role.
+
+### Stage 4: Record outcome
+
+- Record investigation outcomes and resolution notes.
+- Create and track corrective actions, owners and due dates.
+- Record completion evidence.
+- Track risk control separately from resolution, verification and closure.
 - Require authorised verification and closure.
+- Support reopening with a recorded reason and audit history.
 
-### 6. Manager dashboard
-- Display open, overdue and closed cases.
-- Show outstanding corrective actions.
-- Provide basic category, location and monthly reporting.
+### Stage 5: Respond
 
-### 7. AI safety boundaries
-- AI recommendations must never replace professional safety decisions.
-- Emergency escalation must use deterministic rules and operational procedures.
-- AI must not automatically downgrade serious reports, close cases or dispatch outcome letters.
-- Human approval is required for consequential decisions.
-- Record AI suggestions, model version and human decisions.
+- Record acknowledgement and outcome communications.
+- Draft clear, accessible outcome messages.
+- Support language selection and translation.
+- Disclose when AI has drafted or translated content.
+- Require human approval before consequential communication is sent.
+- Record approval, language, communication status and sent time.
 
-### MVP acceptance criteria
-- A reporter can submit an identified or anonymous incident.
-- Voice input can populate suggested fields for human review.
-- Follow-up questions can clarify missing information.
-- A case handler can confirm priority and assign an officer.
-- An officer can record findings and risk controls.
-- A manager can verify actions and close a case.
-- Important decisions and status changes are auditable.
+### Stage 6: Review and improve
+
+- Provide a team manager dashboard.
+- Display open, overdue, resolved and closed cases.
+- Show team workload and outstanding corrective actions.
+- Track acknowledgement, time to risk controlled and time to resolution where the required timestamps exist.
+- Show trends by category, location and reporting period.
+- Interpret changes carefully: increased reporting may indicate improved reporting rather than worsening underlying conditions.
+
+## 5. AI Requirements and Safety Boundaries
+
+AI may assist with:
+- Speech-to-text and suggested form-field extraction.
+- Relevant follow-up question suggestions.
+- Category and team recommendations.
+- Priority recommendations with reasons.
+- Possible duplicate identification.
+- Investigation summaries.
+- Outcome letter drafting and translation.
+
+Controls:
+- Reporters review and approve extracted information before submission.
+- AI must not invent missing information.
+- AI recommendations do not replace professional decisions.
+- AI must not automatically downgrade serious reports, close cases, merge cases or dispatch outcome letters.
+- Emergency escalation uses deterministic rules and operational procedures, not an AI model.
+- Record AI task type, provider/model version where available, suggestion and human decision.
+- Consider bias, accessibility, privacy and language differences during testing.
+
+## 6. Non-Functional Requirements
+
+- Responsive and accessible interface.
+- Readable language, keyboard access, appropriate contrast and clear validation messages.
+- Backend validation and role-based authorisation.
+- Secure handling, validation and malware scanning of uploaded files.
+- Audit history for important actions and decisions.
+- UTC timestamps.
+- Data minimisation and approved retention rules.
+- Modular, testable and maintainable architecture.
+- Use fictional or approved anonymised data in development, testing and demonstration environments. Do not use real personal or confidential information without appropriate authorisation.
+
+## 7. MVP Scope and Delivery Approach
+
+Deliver the complete core case workflow before adding advanced AI capabilities. Implement in verified milestones, with tests and documentation at each stage.
+
+Initial technical slice:
+- Submit a fictional report through the API.
+- Persist it in the database.
+- Generate a unique case reference.
+- Retrieve the case using an authorised mechanism.
+- Reject invalid submissions with understandable errors.
+
+Subsequent milestones add triage, assignments, investigation, corrective actions, communications, dashboards, AI assistance, security and accessibility evidence.
+
+## 8. Acceptance Criteria
+
+The solution should demonstrate that:
+- A reporter can submit an identified or anonymous fictional issue.
+- The system returns a unique case reference and acknowledgement.
+- A case handler can review, confirm triage information and assign a case.
+- A field officer can record attendance, findings, evidence and controls.
+- Corrective actions can be tracked and verified.
+- An authorised person can close or reopen a case with an audit trail.
+- A reporter can receive an approved outcome communication.
+- A manager can review workload, delays and trends.
+- Invalid input is rejected with understandable validation feedback.
+- Use fictional or approved anonymised data in development, testing and demonstration environments.
+- Do not use real personal or confidential information without appropriate authorisation.
