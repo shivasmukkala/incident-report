@@ -1,2 +1,2 @@
-# incident-report
+# Incident-Report
 AI-assisted Incident-report
