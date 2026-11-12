@@ -20,7 +20,15 @@ Incident Report follows a six-stage Request-to-Resolution workflow:
 ## 3. Personas and Roles
 
 ### Reporter
-A resident, customer, employee, visitor or member of the public. Needs an accessible way to submit an issue, receive confirmation and understand the outcome. Reporting should not require a staff account; anonymous reporting is supported.
+A resident, customer, employee, visitor or member of the public. Needs an accessible way to submit an issue, receive confirmation and understand the outcome.
+
+Reporters must be able to:
+- Submit a report without creating an account.
+- Optionally create an account or sign in before reporting.
+- Access the reporting form directly through the website.
+- Access the same reporting form by scanning a QR code.
+- Submit an identified or anonymous report.
+- Receive a unique case reference and securely follow up on their report.
 
 ### Case handler / Triage officer
 Needs to review reports, clarify information, confirm category and priority, identify possible duplicates and route cases to the appropriate team.
@@ -37,13 +45,18 @@ These are the four primary application roles. Administrator access may be added 
 
 ### Stage 1: Report
 
-- Allow people to report an issue using a responsive web interface.
+- Provide a responsive public reporting interface.
+- Allow reporting with or without creating an account.
+- Allow access through the public website or by scanning a QR code.
+- QR codes may contain a location identifier to pre-populate the reporting location.
+- Allow reporters to review and correct pre-populated location information.
 - Support identified and anonymous reports.
 - Do not require a staff account to submit a report.
 - Capture a title, description, category or issue type, perceived urgency, incident date/time and location.
 - Support optional evidence uploads.
 - Support optional voice-assisted reporting, with a text alternative.
 - Generate a unique case reference.
+- Provide secure follow-up for guest reporters; a case reference alone must not grant access to private case information.
 - Acknowledge receipt and explain how the reporter can follow up.
 - Provide a clear emergency instruction: users must not wait for this application in an emergency and must follow the relevant emergency procedures.
 
