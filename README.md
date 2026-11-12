@@ -110,4 +110,5 @@ See [Security](docs/SECURITY.md).
 
 ## Project Status
 
-Hackathon development project. Not approved for real-world health and safety operations.
+Case-management development project. Not approved for real-world health and safety operations.
+
