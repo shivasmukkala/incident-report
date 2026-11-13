@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-
+from sqlalchemy import ForeignKey
 from sqlalchemy import DateTime, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,6 +18,17 @@ class Case(Base):
         default=generate_case_reference,
     )
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    reporter_user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=True,
+        index=True,
+    )
+
+    assigned_to_user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=True,
+        index=True,
+    )
 
     title: Mapped[str] = mapped_column(String(200), nullable=False)
 

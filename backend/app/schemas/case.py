@@ -28,3 +28,13 @@ class CaseResponse(BaseModel):
     location_precision: str | None
 
     model_config = ConfigDict(from_attributes=True)
+
+class CaseAssignRequest(BaseModel):
+    assigned_to_user_id: int = Field(gt=0)
+    reason: str | None = Field(default=None, max_length=2000)
+
+
+class CaseAssignmentResponse(BaseModel):
+    case_id: int
+    assigned_to_user_id: int
+    message: str

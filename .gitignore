@@ -48,3 +48,11 @@ coverage/
 *.save
 *.save.*
 *~
+*.db.backup*
+
+# Vim temporary files
+*.swp
+*.swo
+
+# Local documentation backups
+docs/*.backup.md

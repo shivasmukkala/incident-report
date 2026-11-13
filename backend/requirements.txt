@@ -5,3 +5,6 @@ alembic
 pydantic-settings
 pytest
 httpx
+pwdlib[argon2]
+PyJWT
+email-validator
